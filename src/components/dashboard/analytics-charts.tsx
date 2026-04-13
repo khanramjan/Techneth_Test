@@ -13,6 +13,9 @@ import type { AnalyticsPoint } from "@/types/dashboard";
 
 type AnalyticsChartsProps = {
   series: AnalyticsPoint[];
+  scoreTrendLabel: string;
+  scoreTrendBadge: string;
+  dealBarsLabel: string;
 };
 
 type TooltipPayload = {
@@ -43,13 +46,18 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
   );
 }
 
-export function AnalyticsCharts({ series }: AnalyticsChartsProps) {
+export function AnalyticsCharts({
+  series,
+  scoreTrendLabel,
+  scoreTrendBadge,
+  dealBarsLabel,
+}: AnalyticsChartsProps) {
   return (
     <div className="grid gap-3 md:grid-cols-2">
       <div className="rounded-2xl border border-[#e4e5dc] bg-[#f9f9f4] p-3">
         <div className="mb-2 flex items-center justify-between">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6d7065]">Score trend</p>
-          <span className="rounded-lg bg-[#ece54b] px-2 py-1 text-[10px] font-bold text-[#323428]">LIVE</span>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6d7065]">{scoreTrendLabel}</p>
+          <span className="rounded-lg bg-[#ece54b] px-2 py-1 text-[10px] font-bold text-[#323428]">{scoreTrendBadge}</span>
         </div>
         <div className="h-28 w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -74,7 +82,7 @@ export function AnalyticsCharts({ series }: AnalyticsChartsProps) {
         </div>
       </div>
       <div className="rounded-2xl border border-[#e4e5dc] bg-[#f9f9f4] p-3">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6d7065]">Deal bars</p>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#6d7065]">{dealBarsLabel}</p>
         <div className="h-28 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={series} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>

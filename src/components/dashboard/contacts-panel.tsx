@@ -3,15 +3,16 @@ import { Plus } from "lucide-react";
 import type { ContactSection } from "@/types/dashboard";
 
 type ContactsPanelProps = {
+  title: string;
   sections: ContactSection[];
   selectedName: string;
 };
 
-export function ContactsPanel({ sections, selectedName }: ContactsPanelProps) {
+export function ContactsPanel({ title, sections, selectedName }: ContactsPanelProps) {
   return (
     <section className="rounded-[30px] bg-[#f4f5ef] p-4 sm:p-5 xl:min-h-[730px]">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-3xl font-semibold tracking-tight text-[#21231d]">All Contacts</h2>
+        <h2 className="text-3xl font-semibold tracking-tight text-[#21231d]">{title}</h2>
       </div>
       <div className="space-y-4">
         {sections.map((section) => (

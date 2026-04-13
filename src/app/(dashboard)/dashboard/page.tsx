@@ -15,9 +15,6 @@ export default async function DashboardPage() {
   }
 
   return (
-    <DashboardScreen
-      data={dashboardData as DashboardData}
-      userEmail={user.email ?? ""}
-    />
+    <DashboardScreen data={dashboardData as DashboardData} />
   );
 }

@@ -9,14 +9,9 @@ import type { DashboardData } from "@/types/dashboard";
 
 type DashboardScreenProps = {
   data: DashboardData;
-  userEmail: string;
 };
 
-export function DashboardScreen({ data, userEmail }: DashboardScreenProps) {
-  const userSubtitle = userEmail
-    ? `${data.currentUser.role} · ${userEmail}`
-    : data.currentUser.role;
-
+export function DashboardScreen({ data }: DashboardScreenProps) {
   return (
     <div className="min-h-screen bg-[#b5b5b0] p-2 sm:p-4 md:p-6">
       <div className="mx-auto max-w-[1680px] rounded-[34px] border border-[#aeb0a6] bg-[#e8e9e1] p-3 sm:p-4 lg:p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.62),0_22px_70px_rgba(48,50,37,0.25)]">
@@ -48,7 +43,7 @@ export function DashboardScreen({ data, userEmail }: DashboardScreenProps) {
               />
               <div>
                 <p className="text-sm font-semibold text-[#282a22]">{data.currentUser.name}</p>
-                <p className="text-xs text-[#81847a]">{userSubtitle}</p>
+                <p className="text-xs text-[#81847a]">{data.currentUser.role}</p>
               </div>
             </div>
             <button
@@ -64,10 +59,12 @@ export function DashboardScreen({ data, userEmail }: DashboardScreenProps) {
         <div className="grid gap-4 xl:grid-cols-[68px_295px_minmax(0,1fr)_330px] lg:grid-cols-[68px_295px_minmax(0,1fr)]">
           <LeftRail brand={data.brand} items={data.railItems} />
           <ContactsPanel
+            title={data.contactsTitle}
             sections={data.contactSections}
             selectedName={data.selectedContact.name}
           />
           <MainPanel
+            toolbarIcons={data.mainToolbarIcons}
             selectedContact={data.selectedContact}
             analytics={data.analytics}
             dealMetrics={data.dealMetrics}
@@ -75,6 +72,7 @@ export function DashboardScreen({ data, userEmail }: DashboardScreenProps) {
           />
           <RightPanel
             className="lg:col-span-3 xl:col-span-1"
+            config={data.rightPanel}
             tasks={data.tasks}
             messages={data.chat.messages}
             attachments={data.chat.attachments}

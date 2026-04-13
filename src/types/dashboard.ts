@@ -26,12 +26,19 @@ export type ContactMeta = {
   value: string;
 };
 
+export type PanelAction = {
+  id: number;
+  icon: string;
+  label?: string;
+};
+
 export type SelectedContact = {
   name: string;
   role: string;
   avatar: string;
   meta: ContactMeta[];
   tabs: string[];
+  quickActions: string[];
 };
 
 export type AnalyticsPoint = {
@@ -44,9 +51,13 @@ export type AnalyticsPoint = {
 };
 
 export type AnalyticsData = {
+  averageScoreLabel: string;
   averageScore: number;
   delta: string;
   range: string;
+  scoreTrendLabel: string;
+  scoreTrendBadge: string;
+  dealBarsLabel: string;
   series: AnalyticsPoint[];
 };
 
@@ -79,9 +90,19 @@ export type ChatAttachment = {
   title: string;
 };
 
+export type RightPanelConfig = {
+  actions: PanelAction[];
+  notesTitle: string;
+  chatTitle: string;
+  chatInputPlaceholder: string;
+  statusLabel: string;
+};
+
 export type DashboardData = {
   brand: string;
   searchPlaceholder: string;
+  contactsTitle: string;
+  mainToolbarIcons: string[];
   currentUser: {
     name: string;
     role: string;
@@ -91,6 +112,7 @@ export type DashboardData = {
   contactSections: ContactSection[];
   selectedContact: SelectedContact;
   analytics: AnalyticsData;
+  rightPanel: RightPanelConfig;
   dealMetrics: DealMetric[];
   tasks: NoteTask[];
   chat: {
@@ -101,4 +123,4 @@ export type DashboardData = {
     title: string;
     image: string;
   };
-}
+};

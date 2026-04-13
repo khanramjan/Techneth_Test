@@ -1,6 +1,8 @@
 {
   "brand": "o",
   "searchPlaceholder": "Search by Contact, Account, Deal...",
+  "contactsTitle": "All Contacts",
+  "mainToolbarIcons": ["undo", "redo", "rotate-ccw"],
   "currentUser": {
     "name": "Emily King",
     "role": "Realtor",
@@ -57,12 +59,17 @@
       { "id": 3, "icon": "map", "label": "Location", "value": "New York, USA" },
       { "id": 4, "icon": "briefcase", "label": "Specialty", "value": "Manager" }
     ],
-    "tabs": ["Analytics", "General", "Summary"]
+    "tabs": ["Analytics", "General", "Summary"],
+    "quickActions": ["phone", "video", "message-circle", "briefcase"]
   },
   "analytics": {
+    "averageScoreLabel": "Average score",
     "averageScore": 430,
     "delta": "+138 pts",
     "range": "Last weeks",
+    "scoreTrendLabel": "Score trend",
+    "scoreTrendBadge": "LIVE",
+    "dealBarsLabel": "Deal bars",
     "series": [
       { "label": "W1", "score": 312, "started": 8, "lost": 5, "won": 7, "focus": 56 },
       { "label": "W2", "score": 338, "started": 12, "lost": 6, "won": 8, "focus": 62 },
@@ -71,6 +78,17 @@
       { "label": "W5", "score": 402, "started": 17, "lost": 11, "won": 16, "focus": 82 },
       { "label": "W6", "score": 430, "started": 19, "lost": 25, "won": 24, "focus": 88 }
     ]
+  },
+  "rightPanel": {
+    "actions": [
+      { "id": 1, "icon": "share", "label": "Share" },
+      { "id": 2, "icon": "plus" },
+      { "id": 3, "icon": "arrow-up-right" }
+    ],
+    "notesTitle": "Noted",
+    "chatTitle": "Chat",
+    "chatInputPlaceholder": "Type something...",
+    "statusLabel": "Realtime channel active"
   },
   "dealMetrics": [
     { "id": 1, "label": "Deal Started", "value": 19, "progress": 64, "accent": "#ece54b", "delta": "1+" },

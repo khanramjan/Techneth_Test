@@ -8,16 +8,30 @@ import {
   Send,
   Share2,
 } from "lucide-react";
-import type { ChatAttachment, ChatMessage, NoteTask } from "@/types/dashboard";
+import type { LucideIcon } from "lucide-react";
+import type {
+  ChatAttachment,
+  ChatMessage,
+  NoteTask,
+  RightPanelConfig,
+} from "@/types/dashboard";
 
 type RightPanelProps = {
+  config: RightPanelConfig;
   tasks: NoteTask[];
   messages: ChatMessage[];
   attachments: ChatAttachment[];
   className?: string;
 };
 
+const actionIconMap: Record<string, LucideIcon> = {
+  share: Share2,
+  plus: Plus,
+  "arrow-up-right": ArrowUpRight,
+};
+
 export function RightPanel({
+  config,
   tasks,
   messages,
   attachments,
@@ -28,31 +42,38 @@ export function RightPanel({
       <div className="rounded-[30px] bg-[#f4f5ef] p-4 sm:p-5">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#dedfd5] bg-[#f9f9f4] px-3 text-sm font-semibold text-[#3c3f36]"
-            >
-              <Share2 className="h-4 w-4" />
-              Share
-            </button>
-            <button
-              type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#484b41]"
-            >
-              <Plus className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#484b41]"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-            </button>
+            {config.actions.map((action) => {
+              const Icon = actionIconMap[action.icon] ?? Share2;
+
+              if (action.label) {
+                return (
+                  <button
+                    key={action.id}
+                    type="button"
+                    className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#dedfd5] bg-[#f9f9f4] px-3 text-sm font-semibold text-[#3c3f36]"
+                  >
+                    <Icon className="h-4 w-4" />
+                    {action.label}
+                  </button>
+                );
+              }
+
+              return (
+                <button
+                  key={action.id}
+                  type="button"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#484b41]"
+                >
+                  <Icon className="h-4 w-4" />
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div className="rounded-2xl border border-[#e2e3da] bg-white p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-base font-semibold text-[#25271f]">Noted</h3>
+            <h3 className="text-base font-semibold text-[#25271f]">{config.notesTitle}</h3>
             <span className="rounded-lg bg-[#f2f3ed] px-2 py-1 text-xs font-semibold text-[#66695f]">
               {tasks.length}
             </span>
@@ -82,7 +103,7 @@ export function RightPanel({
 
       <div className="rounded-[30px] bg-[#f4f5ef] p-4 sm:p-5">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-base font-semibold text-[#25271f]">Chat</h3>
+          <h3 className="text-base font-semibold text-[#25271f]">{config.chatTitle}</h3>
           <button
             type="button"
             className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dedfd5] bg-[#f9f9f4] text-[#484b41]"
@@ -116,7 +137,7 @@ export function RightPanel({
           <div className="flex items-center gap-2 rounded-xl border border-[#e1e2d8] bg-[#f9f9f4] px-3 py-2">
             <Search className="h-4 w-4 text-[#8d9085]" />
             <input
-              placeholder="Type something..."
+              placeholder={config.chatInputPlaceholder}
               className="h-8 flex-1 bg-transparent text-sm text-[#303229] outline-none placeholder:text-[#a0a39a]"
             />
             <button
@@ -131,7 +152,7 @@ export function RightPanel({
         <div className="mt-3 flex items-center gap-2 text-xs text-[#8d9085]">
           <Link2 className="h-3.5 w-3.5" />
           <MessageCircle className="h-3.5 w-3.5" />
-          <span>Realtime channel active</span>
+          <span>{config.statusLabel}</span>
         </div>
       </div>
     </aside>

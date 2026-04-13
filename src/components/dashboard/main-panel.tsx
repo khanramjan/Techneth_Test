@@ -19,6 +19,7 @@ import type {
 import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
 
 type MainPanelProps = {
+  toolbarIcons: string[];
   selectedContact: SelectedContact;
   analytics: AnalyticsData;
   dealMetrics: DealMetric[];
@@ -35,7 +36,18 @@ const metaIconMap: Record<string, LucideIcon> = {
   briefcase: BriefcaseBusiness,
 };
 
+const actionIconMap: Record<string, LucideIcon> = {
+  undo: Undo2,
+  redo: Redo2,
+  "rotate-ccw": RotateCcw,
+  phone: Phone,
+  video: Video,
+  "message-circle": MessageCircle,
+  briefcase: BriefcaseBusiness,
+};
+
 export function MainPanel({
+  toolbarIcons,
   selectedContact,
   analytics,
   dealMetrics,
@@ -44,24 +56,19 @@ export function MainPanel({
   return (
     <main className="rounded-[30px] bg-[#f4f5ef] p-4 sm:p-5 xl:min-h-[730px]">
       <div className="mb-4 flex items-center gap-2">
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#464940]"
-        >
-          <Undo2 className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#464940]"
-        >
-          <Redo2 className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#464940]"
-        >
-          <RotateCcw className="h-4 w-4" />
-        </button>
+        {toolbarIcons.map((icon, index) => {
+          const Icon = actionIconMap[icon] ?? Undo2;
+
+          return (
+            <button
+              key={`${icon}-${index}`}
+              type="button"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#464940]"
+            >
+              <Icon className="h-4 w-4" />
+            </button>
+          );
+        })}
       </div>
 
       <div className="rounded-3xl border border-[#e1e2d9] bg-[#f8f8f3] p-3 sm:p-4">
@@ -75,15 +82,19 @@ export function MainPanel({
               className="h-56 w-full rounded-2xl object-cover"
             />
             <div className="mt-3 flex items-center justify-center gap-2">
-              {[Phone, Video, MessageCircle, BriefcaseBusiness].map((Icon, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#e1e2d8] bg-[#f7f7f2] text-[#43463d]"
-                >
-                  <Icon className="h-4 w-4" />
-                </button>
-              ))}
+              {selectedContact.quickActions.map((icon, index) => {
+                const Icon = actionIconMap[icon] ?? Phone;
+
+                return (
+                  <button
+                    key={`${icon}-${index}`}
+                    type="button"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#e1e2d8] bg-[#f7f7f2] text-[#43463d]"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -134,7 +145,7 @@ export function MainPanel({
         <div className="mt-4 rounded-3xl border border-[#e1e2d9] bg-white p-3 sm:p-4">
           <div className="mb-3 flex flex-wrap items-center gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-[#7f8277]">Average score</p>
+              <p className="text-xs uppercase tracking-[0.18em] text-[#7f8277]">{analytics.averageScoreLabel}</p>
               <div className="flex items-end gap-2">
                 <p className="text-[56px] leading-none font-semibold tracking-tight text-[#25271f]">
                   {analytics.averageScore}
@@ -151,7 +162,12 @@ export function MainPanel({
               {analytics.range}
             </button>
           </div>
-          <AnalyticsCharts series={analytics.series} />
+          <AnalyticsCharts
+            series={analytics.series}
+            scoreTrendLabel={analytics.scoreTrendLabel}
+            scoreTrendBadge={analytics.scoreTrendBadge}
+            dealBarsLabel={analytics.dealBarsLabel}
+          />
         </div>
       </div>
 
