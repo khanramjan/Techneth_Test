@@ -1,0 +1,119 @@
+{
+  "brand": "o",
+  "searchPlaceholder": "Search by Contact, Account, Deal...",
+  "currentUser": {
+    "name": "Emily King",
+    "role": "Realtor",
+    "avatar": "https://i.pravatar.cc/96?img=47"
+  },
+  "railItems": [
+    { "id": 1, "icon": "chevron-left" },
+    { "id": 2, "icon": "camera" },
+    { "id": 3, "icon": "target" },
+    { "id": 4, "icon": "circle" },
+    { "id": 5, "icon": "users", "active": true },
+    { "id": 6, "icon": "share" },
+    { "id": 7, "icon": "bar-chart" },
+    { "id": 8, "icon": "user" },
+    { "id": 9, "icon": "phone", "dot": true },
+    { "id": 10, "icon": "mail" },
+    { "id": 11, "icon": "grid" }
+  ],
+  "contactSections": [
+    {
+      "id": 1,
+      "title": "New contact",
+      "count": 8,
+      "contacts": [
+        { "id": 101, "name": "Gregory Clark", "role": "Manager", "avatar": "https://i.pravatar.cc/64?img=12" },
+        { "id": 102, "name": "George Allen", "role": "Broker", "avatar": "https://i.pravatar.cc/64?img=11" },
+        { "id": 103, "name": "Megan Brooks", "role": "Analyst", "avatar": "https://i.pravatar.cc/64?img=32" },
+        { "id": 104, "name": "Logan Smith", "role": "Manager", "avatar": "https://i.pravatar.cc/64?img=15" },
+        { "id": 105, "name": "Abigail Green", "role": "Investor", "avatar": "https://i.pravatar.cc/64?img=24" },
+        { "id": 106, "name": "Morgan Lee", "role": "Investor", "avatar": "https://i.pravatar.cc/64?img=39" },
+        { "id": 107, "name": "Regina Adams", "role": "Assistant", "avatar": "https://i.pravatar.cc/64?img=45" },
+        { "id": 108, "name": "Angela Grant", "role": "Appraiser", "avatar": "https://i.pravatar.cc/64?img=20" }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Favorites contact",
+      "count": 12,
+      "contacts": [
+        { "id": 201, "name": "Douglas Brown", "role": "Manager", "avatar": "https://i.pravatar.cc/64?img=14" },
+        { "id": 202, "name": "Edgar White", "role": "Realtor", "avatar": "https://i.pravatar.cc/64?img=58" },
+        { "id": 203, "name": "Emma Johnson", "role": "Investor", "avatar": "https://i.pravatar.cc/64?img=5" },
+        { "id": 204, "name": "Liam Wright", "role": "Assistant", "avatar": "https://i.pravatar.cc/64?img=66" }
+      ]
+    }
+  ],
+  "selectedContact": {
+    "name": "Gregory Clark",
+    "role": "Manager",
+    "avatar": "https://i.pravatar.cc/280?img=12",
+    "meta": [
+      { "id": 1, "icon": "phone", "label": "Phone number", "value": "(555) 123-4567" },
+      { "id": 2, "icon": "mail", "label": "Email", "value": "clark@gmail.com" },
+      { "id": 3, "icon": "map", "label": "Location", "value": "New York, USA" },
+      { "id": 4, "icon": "briefcase", "label": "Specialty", "value": "Manager" }
+    ],
+    "tabs": ["Analytics", "General", "Summary"]
+  },
+  "analytics": {
+    "averageScore": 430,
+    "delta": "+138 pts",
+    "range": "Last weeks",
+    "series": [
+      { "label": "W1", "score": 312, "started": 8, "lost": 5, "won": 7, "focus": 56 },
+      { "label": "W2", "score": 338, "started": 12, "lost": 6, "won": 8, "focus": 62 },
+      { "label": "W3", "score": 352, "started": 14, "lost": 7, "won": 9, "focus": 69 },
+      { "label": "W4", "score": 386, "started": 16, "lost": 9, "won": 13, "focus": 74 },
+      { "label": "W5", "score": 402, "started": 17, "lost": 11, "won": 16, "focus": 82 },
+      { "label": "W6", "score": 430, "started": 19, "lost": 25, "won": 24, "focus": 88 }
+    ]
+  },
+  "dealMetrics": [
+    { "id": 1, "label": "Deal Started", "value": 19, "progress": 64, "accent": "#ece54b", "delta": "1+" },
+    { "id": 2, "label": "Lost Deals", "value": 25, "progress": 72, "accent": "#f4958d", "delta": "22+" },
+    { "id": 3, "label": "Won Deals", "value": 24, "progress": 68, "accent": "#b8f06c", "delta": "18+" }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "text": "Enroll in real estate courses to update knowledge and skills",
+      "time": "6:11 PM",
+      "done": true
+    },
+    {
+      "id": 2,
+      "text": "Conduct a price analysis of real estate in the selected area",
+      "time": "8:32 AM",
+      "done": true
+    },
+    {
+      "id": 3,
+      "text": "Enhance the feedback and review system for clients",
+      "time": "8:12 PM",
+      "done": false
+    }
+  ],
+  "chat": {
+    "messages": [
+      {
+        "id": 1,
+        "sender": "Gregory",
+        "text": "deal, I need to check something!",
+        "time": "8:32 AM",
+        "mine": false
+      }
+    ],
+    "attachments": [
+      { "id": 1, "title": "Summary.pdf" },
+      { "id": 2, "title": "Contract.pdf" }
+    ]
+  },
+  "property": {
+    "title": "23345 Brightwood Cottage, New York, OR 97477",
+    "image": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1600&q=80"
+  }
+}
