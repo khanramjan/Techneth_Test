@@ -10,6 +10,9 @@ export type Contact = {
   name: string;
   role: string;
   avatar: string;
+  email?: string;
+  phone?: string;
+  location?: string;
 };
 
 export type ContactSection = {
@@ -110,7 +113,7 @@ export type DashboardData = {
   };
   railItems: RailItem[];
   contactSections: ContactSection[];
-  selectedContact: SelectedContact;
+  selectedContact: SelectedContact | null;
   analytics: AnalyticsData;
   rightPanel: RightPanelConfig;
   dealMetrics: DealMetric[];

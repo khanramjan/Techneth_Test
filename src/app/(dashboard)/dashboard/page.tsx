@@ -1,10 +1,15 @@
 import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
 import { DashboardScreen } from "@/components/dashboard/dashboard-screen";
-import dashboardData from "@/data/dashboard.json";
+import { readDashboardData } from "@/lib/dashboard-data";
 import { createClient } from "@/lib/supabase/server";
-import type { DashboardData } from "@/types/dashboard";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function DashboardPage() {
+  noStore();
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -14,7 +19,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  return (
-    <DashboardScreen data={dashboardData as DashboardData} />
-  );
+  const dashboardData = await readDashboardData();
+
+  return <DashboardScreen data={dashboardData} />;
 }

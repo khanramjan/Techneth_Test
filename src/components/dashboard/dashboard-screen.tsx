@@ -1,17 +1,125 @@
+"use client";
+
 import Image from "next/image";
 import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import { useMemo, useState } from "react";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ContactsPanel } from "@/components/dashboard/contacts-panel";
 import { LeftRail } from "@/components/dashboard/left-rail";
 import { MainPanel } from "@/components/dashboard/main-panel";
 import { RightPanel } from "@/components/dashboard/right-panel";
-import type { DashboardData } from "@/types/dashboard";
+import type { Contact, DashboardData, SelectedContact } from "@/types/dashboard";
 
 type DashboardScreenProps = {
   data: DashboardData;
 };
 
+type SearchScope = "all" | "name" | "role";
+
+function aliasFromName(name: string) {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, ".");
+}
+
+function toSelectedContact(contact: Contact): SelectedContact {
+  const alias = aliasFromName(contact.name);
+
+  return {
+    name: contact.name,
+    role: contact.role,
+    avatar: contact.avatar,
+    meta: [
+      { id: 1, icon: "phone", label: "Phone number", value: contact.phone ?? "(555) 000-0000" },
+      { id: 2, icon: "mail", label: "Email", value: contact.email ?? `${alias}@mail.com` },
+      { id: 3, icon: "map", label: "Location", value: contact.location ?? "New York, USA" },
+      { id: 4, icon: "briefcase", label: "Specialty", value: contact.role },
+    ],
+    tabs: ["Analytics", "General", "Summary"],
+    quickActions: ["phone", "video", "message-circle", "briefcase"],
+  };
+}
+
 export function DashboardScreen({ data }: DashboardScreenProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchScope, setSearchScope] = useState<SearchScope>("all");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [headerMessage, setHeaderMessage] = useState("Interactive mode active");
+  const [selectedContactOverride, setSelectedContactOverride] = useState<SelectedContact | null>(null);
+  const [activeRailId, setActiveRailId] = useState(
+    data.railItems.find((item) => item.active)?.id ?? data.railItems[0]?.id ?? 0,
+  );
+  const selectedContact = selectedContactOverride ?? data.selectedContact;
+
+  const visibleSections = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
+
+    return data.contactSections.map((section) => {
+      let contacts = [...section.contacts];
+
+      if (normalizedQuery) {
+        contacts = contacts.filter((contact) => {
+          const byName = contact.name.toLowerCase().includes(normalizedQuery);
+          const byRole = contact.role.toLowerCase().includes(normalizedQuery);
+
+          if (searchScope === "name") {
+            return byName;
+          }
+
+          if (searchScope === "role") {
+            return byRole;
+          }
+
+          return byName || byRole;
+        });
+      }
+
+      contacts.sort((first, second) => {
+        const comparator = first.name.localeCompare(second.name);
+        return sortDirection === "asc" ? comparator : comparator * -1;
+      });
+
+      return {
+        ...section,
+        contacts,
+        count: contacts.length,
+      };
+    });
+  }, [data.contactSections, searchQuery, searchScope, sortDirection]);
+
+  const railItems = useMemo(
+    () => data.railItems.map((item) => ({ ...item, active: item.id === activeRailId })),
+    [activeRailId, data.railItems],
+  );
+
+  const cycleSearchScope = () => {
+    setSearchScope((current) => {
+      const next = current === "all" ? "name" : current === "name" ? "role" : "all";
+      setHeaderMessage(`Search scope: ${next}`);
+      return next;
+    });
+  };
+
+  const toggleSortDirection = () => {
+    setSortDirection((current) => {
+      const next = current === "asc" ? "desc" : "asc";
+      setHeaderMessage(`Sort direction: ${next}`);
+      return next;
+    });
+  };
+
+  const handleRailSelect = (itemId: number) => {
+    setActiveRailId(itemId);
+    setHeaderMessage(`Rail item ${itemId} selected`);
+  };
+
+  const handleContactSelect = (contact: Contact) => {
+    setSelectedContactOverride(toSelectedContact(contact));
+    setHeaderMessage(`${contact.name} selected`);
+  };
+
   return (
     <div className="min-h-screen bg-[#b5b5b0] p-2 sm:p-4 md:p-6">
       <div className="mx-auto max-w-[1680px] rounded-[34px] border border-[#aeb0a6] bg-[#e8e9e1] p-3 sm:p-4 lg:p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.62),0_22px_70px_rgba(48,50,37,0.25)]">
@@ -21,10 +129,15 @@ export function DashboardScreen({ data }: DashboardScreenProps) {
               <Search className="h-4 w-4" />
               <input
                 placeholder={data.searchPlaceholder}
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
                 className="h-full flex-1 bg-transparent text-sm font-medium text-[#2b2d25] outline-none placeholder:text-[#9ca094]"
               />
               <button
                 type="button"
+                onClick={cycleSearchScope}
+                title={`Search scope: ${searchScope}`}
+                aria-label={`Search scope: ${searchScope}`}
                 className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dfe0d6] bg-[#f8f8f4] text-[#666960]"
               >
                 <ChevronDown className="h-4 w-4" />
@@ -48,6 +161,9 @@ export function DashboardScreen({ data }: DashboardScreenProps) {
             </div>
             <button
               type="button"
+              onClick={toggleSortDirection}
+              title={`Sort direction: ${sortDirection}`}
+              aria-label={`Sort direction: ${sortDirection}`}
               className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[#dbddd2] bg-[#f7f8f3] text-[#565950]"
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -56,16 +172,27 @@ export function DashboardScreen({ data }: DashboardScreenProps) {
           </div>
         </header>
 
+        <div className="mb-4 rounded-2xl border border-[#d9dbd1] bg-[#f4f5ef] px-4 py-2 text-xs font-semibold tracking-[0.06em] text-[#6b6e65]">
+          {headerMessage}
+        </div>
+
         <div className="grid gap-4 xl:grid-cols-[68px_295px_minmax(0,1fr)_330px] lg:grid-cols-[68px_295px_minmax(0,1fr)]">
-          <LeftRail brand={data.brand} items={data.railItems} />
+          <LeftRail
+            brand={data.brand}
+            items={railItems}
+            activeItemId={activeRailId}
+            onSelect={handleRailSelect}
+          />
           <ContactsPanel
             title={data.contactsTitle}
-            sections={data.contactSections}
-            selectedName={data.selectedContact.name}
+            sections={visibleSections}
+            selectedName={selectedContact?.name ?? ""}
+            onContactSelect={handleContactSelect}
           />
           <MainPanel
+            key={selectedContact?.name ?? "no-contact"}
             toolbarIcons={data.mainToolbarIcons}
-            selectedContact={data.selectedContact}
+            selectedContact={selectedContact}
             analytics={data.analytics}
             dealMetrics={data.dealMetrics}
             property={data.property}

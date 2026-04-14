@@ -17,6 +17,8 @@ import type { RailItem } from "@/types/dashboard";
 type LeftRailProps = {
   brand: string;
   items: RailItem[];
+  activeItemId: number;
+  onSelect: (itemId: number) => void;
 };
 
 const iconMap: Record<string, LucideIcon> = {
@@ -33,7 +35,7 @@ const iconMap: Record<string, LucideIcon> = {
   grid: Grip,
 };
 
-export function LeftRail({ brand, items }: LeftRailProps) {
+export function LeftRail({ brand, items, activeItemId, onSelect }: LeftRailProps) {
   return (
     <aside className="rounded-[30px] bg-[#f4f5ef] p-2 sm:p-3 xl:min-h-[730px]">
       <div className="flex h-full flex-row gap-2 xl:flex-col xl:justify-between">
@@ -43,13 +45,15 @@ export function LeftRail({ brand, items }: LeftRailProps) {
         <div className="flex flex-1 flex-row gap-2 overflow-x-auto no-scrollbar xl:flex-col xl:overflow-visible">
           {items.map((item) => {
             const Icon = iconMap[item.icon] ?? Circle;
+            const isActive = item.id === activeItemId;
 
             return (
               <button
                 key={item.id}
                 type="button"
+                onClick={() => onSelect(item.id)}
                 className={`relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition ${
-                  item.active
+                  isActive
                     ? "border-[#1f211a] bg-[#1f211a] text-white"
                     : "border-[#e0e1d8] bg-[#f9f9f4] text-[#55584f] hover:bg-white"
                 }`}

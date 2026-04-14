@@ -2,65 +2,135 @@
   "brand": "o",
   "searchPlaceholder": "Search by Contact, Account, Deal...",
   "contactsTitle": "All Contacts",
-  "mainToolbarIcons": ["undo", "redo", "rotate-ccw"],
+  "mainToolbarIcons": [
+    "undo",
+    "redo",
+    "rotate-ccw"
+  ],
   "currentUser": {
     "name": "Emily King",
     "role": "Realtor",
     "avatar": "https://i.pravatar.cc/96?img=47"
   },
   "railItems": [
-    { "id": 1, "icon": "chevron-left" },
-    { "id": 2, "icon": "camera" },
-    { "id": 3, "icon": "target" },
-    { "id": 4, "icon": "circle" },
-    { "id": 5, "icon": "users", "active": true },
-    { "id": 6, "icon": "share" },
-    { "id": 7, "icon": "bar-chart" },
-    { "id": 8, "icon": "user" },
-    { "id": 9, "icon": "phone", "dot": true },
-    { "id": 10, "icon": "mail" },
-    { "id": 11, "icon": "grid" }
+    {
+      "id": 1,
+      "icon": "chevron-left"
+    },
+    {
+      "id": 2,
+      "icon": "camera"
+    },
+    {
+      "id": 3,
+      "icon": "target"
+    },
+    {
+      "id": 4,
+      "icon": "circle"
+    },
+    {
+      "id": 5,
+      "icon": "users",
+      "active": true
+    },
+    {
+      "id": 6,
+      "icon": "share"
+    },
+    {
+      "id": 7,
+      "icon": "bar-chart"
+    },
+    {
+      "id": 8,
+      "icon": "user"
+    },
+    {
+      "id": 9,
+      "icon": "phone",
+      "dot": true
+    },
+    {
+      "id": 10,
+      "icon": "mail"
+    },
+    {
+      "id": 11,
+      "icon": "grid"
+    }
   ],
   "contactSections": [
     {
       "id": 1,
       "title": "New contact",
-      "count": 8,
+      "count": 2,
       "contacts": [
-        { "id": 101, "name": "Gregory Clark", "role": "Manager", "avatar": "https://i.pravatar.cc/64?img=12" },
-        { "id": 102, "name": "George Allen", "role": "Broker", "avatar": "https://i.pravatar.cc/64?img=11" },
-        { "id": 103, "name": "Megan Brooks", "role": "Analyst", "avatar": "https://i.pravatar.cc/64?img=32" },
-        { "id": 104, "name": "Logan Smith", "role": "Manager", "avatar": "https://i.pravatar.cc/64?img=15" },
-        { "id": 105, "name": "Abigail Green", "role": "Investor", "avatar": "https://i.pravatar.cc/64?img=24" },
-        { "id": 106, "name": "Morgan Lee", "role": "Investor", "avatar": "https://i.pravatar.cc/64?img=39" },
-        { "id": 107, "name": "Regina Adams", "role": "Assistant", "avatar": "https://i.pravatar.cc/64?img=45" },
-        { "id": 108, "name": "Angela Grant", "role": "Appraiser", "avatar": "https://i.pravatar.cc/64?img=20" }
+        {
+          "id": 2,
+          "name": "Gian",
+          "role": "Broker",
+          "avatar": "https://i.pravatar.cc/64?u=gian-2-2970568847",
+          "email": "gian@contacthub.io",
+          "phone": "(147) 429-9159",
+          "location": "Austin, USA"
+        },
+        {
+          "id": 1,
+          "name": "Ramjan",
+          "role": "Admin",
+          "avatar": "https://i.pravatar.cc/64?u=Ramjan-1776187177463"
+        }
       ]
     },
     {
       "id": 2,
       "title": "Favorites contact",
-      "count": 12,
-      "contacts": [
-        { "id": 201, "name": "Douglas Brown", "role": "Manager", "avatar": "https://i.pravatar.cc/64?img=14" },
-        { "id": 202, "name": "Edgar White", "role": "Realtor", "avatar": "https://i.pravatar.cc/64?img=58" },
-        { "id": 203, "name": "Emma Johnson", "role": "Investor", "avatar": "https://i.pravatar.cc/64?img=5" },
-        { "id": 204, "name": "Liam Wright", "role": "Assistant", "avatar": "https://i.pravatar.cc/64?img=66" }
-      ]
+      "count": 0,
+      "contacts": []
     }
   ],
   "selectedContact": {
-    "name": "Gregory Clark",
-    "role": "Manager",
-    "avatar": "https://i.pravatar.cc/280?img=12",
+    "name": "Gian",
+    "role": "Broker",
+    "avatar": "https://i.pravatar.cc/64?u=gian-2-2970568847",
     "meta": [
-      { "id": 1, "icon": "phone", "label": "Phone number", "value": "(555) 123-4567" },
-      { "id": 2, "icon": "mail", "label": "Email", "value": "clark@gmail.com" },
-      { "id": 3, "icon": "map", "label": "Location", "value": "New York, USA" },
-      { "id": 4, "icon": "briefcase", "label": "Specialty", "value": "Manager" }
+      {
+        "id": 1,
+        "icon": "phone",
+        "label": "Phone number",
+        "value": "(147) 429-9159"
+      },
+      {
+        "id": 2,
+        "icon": "mail",
+        "label": "Email",
+        "value": "gian@contacthub.io"
+      },
+      {
+        "id": 3,
+        "icon": "map",
+        "label": "Location",
+        "value": "Austin, USA"
+      },
+      {
+        "id": 4,
+        "icon": "briefcase",
+        "label": "Specialty",
+        "value": "Broker"
+      }
     ],
-    "tabs": ["Analytics", "General", "Summary"],
-    "quickActions": ["phone", "video", "message-circle", "briefcase"]
+    "tabs": [
+      "Analytics",
+      "General",
+      "Summary"
+    ],
+    "quickActions": [
+      "phone",
+      "video",
+      "message-circle",
+      "briefcase"
+    ]
   },
   "analytics": {
     "averageScoreLabel": "Average score",
@@ -71,19 +141,71 @@
     "scoreTrendBadge": "LIVE",
     "dealBarsLabel": "Deal bars",
     "series": [
-      { "label": "W1", "score": 312, "started": 8, "lost": 5, "won": 7, "focus": 56 },
-      { "label": "W2", "score": 338, "started": 12, "lost": 6, "won": 8, "focus": 62 },
-      { "label": "W3", "score": 352, "started": 14, "lost": 7, "won": 9, "focus": 69 },
-      { "label": "W4", "score": 386, "started": 16, "lost": 9, "won": 13, "focus": 74 },
-      { "label": "W5", "score": 402, "started": 17, "lost": 11, "won": 16, "focus": 82 },
-      { "label": "W6", "score": 430, "started": 19, "lost": 25, "won": 24, "focus": 88 }
+      {
+        "label": "W1",
+        "score": 312,
+        "started": 8,
+        "lost": 5,
+        "won": 7,
+        "focus": 56
+      },
+      {
+        "label": "W2",
+        "score": 338,
+        "started": 12,
+        "lost": 6,
+        "won": 8,
+        "focus": 62
+      },
+      {
+        "label": "W3",
+        "score": 352,
+        "started": 14,
+        "lost": 7,
+        "won": 9,
+        "focus": 69
+      },
+      {
+        "label": "W4",
+        "score": 386,
+        "started": 16,
+        "lost": 9,
+        "won": 13,
+        "focus": 74
+      },
+      {
+        "label": "W5",
+        "score": 402,
+        "started": 17,
+        "lost": 11,
+        "won": 16,
+        "focus": 82
+      },
+      {
+        "label": "W6",
+        "score": 430,
+        "started": 19,
+        "lost": 25,
+        "won": 24,
+        "focus": 88
+      }
     ]
   },
   "rightPanel": {
     "actions": [
-      { "id": 1, "icon": "share", "label": "Share" },
-      { "id": 2, "icon": "plus" },
-      { "id": 3, "icon": "arrow-up-right" }
+      {
+        "id": 1,
+        "icon": "share",
+        "label": "Share"
+      },
+      {
+        "id": 2,
+        "icon": "plus"
+      },
+      {
+        "id": 3,
+        "icon": "arrow-up-right"
+      }
     ],
     "notesTitle": "Noted",
     "chatTitle": "Chat",
@@ -91,9 +213,30 @@
     "statusLabel": "Realtime channel active"
   },
   "dealMetrics": [
-    { "id": 1, "label": "Deal Started", "value": 19, "progress": 64, "accent": "#ece54b", "delta": "1+" },
-    { "id": 2, "label": "Lost Deals", "value": 25, "progress": 72, "accent": "#f4958d", "delta": "22+" },
-    { "id": 3, "label": "Won Deals", "value": 24, "progress": 68, "accent": "#b8f06c", "delta": "18+" }
+    {
+      "id": 1,
+      "label": "Deal Started",
+      "value": 19,
+      "progress": 64,
+      "accent": "#ece54b",
+      "delta": "1+"
+    },
+    {
+      "id": 2,
+      "label": "Lost Deals",
+      "value": 25,
+      "progress": 72,
+      "accent": "#f4958d",
+      "delta": "22+"
+    },
+    {
+      "id": 3,
+      "label": "Won Deals",
+      "value": 24,
+      "progress": 68,
+      "accent": "#b8f06c",
+      "delta": "18+"
+    }
   ],
   "tasks": [
     {
@@ -126,8 +269,14 @@
       }
     ],
     "attachments": [
-      { "id": 1, "title": "Summary.pdf" },
-      { "id": 2, "title": "Contract.pdf" }
+      {
+        "id": 1,
+        "title": "Summary.pdf"
+      },
+      {
+        "id": 2,
+        "title": "Contract.pdf"
+      }
     ]
   },
   "property": {
