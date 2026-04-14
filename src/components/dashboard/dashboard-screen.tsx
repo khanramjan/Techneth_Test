@@ -12,6 +12,11 @@ import type { Contact, DashboardData, SelectedContact } from "@/types/dashboard"
 
 type DashboardScreenProps = {
   data: DashboardData;
+  authUser: {
+    name: string;
+    role: string;
+    avatar: string;
+  };
 };
 
 type SearchScope = "all" | "name" | "role";
@@ -42,7 +47,7 @@ function toSelectedContact(contact: Contact): SelectedContact {
   };
 }
 
-export function DashboardScreen({ data }: DashboardScreenProps) {
+export function DashboardScreen({ data, authUser }: DashboardScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchScope, setSearchScope] = useState<SearchScope>("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
@@ -148,15 +153,15 @@ export function DashboardScreen({ data }: DashboardScreenProps) {
           <div className="flex flex-wrap items-center justify-end gap-2">
             <div className="flex h-12 items-center gap-2 rounded-2xl border border-[#dbddd2] bg-[#f7f8f3] px-3">
               <Image
-                src={data.currentUser.avatar}
-                alt={data.currentUser.name}
+                src={authUser.avatar}
+                alt={authUser.name}
                 width={32}
                 height={32}
                 className="h-8 w-8 rounded-full object-cover"
               />
               <div>
-                <p className="text-sm font-semibold text-[#282a22]">{data.currentUser.name}</p>
-                <p className="text-xs text-[#81847a]">{data.currentUser.role}</p>
+                <p className="text-sm font-semibold text-[#282a22]">{authUser.name}</p>
+                <p className="text-xs text-[#81847a]">{authUser.role}</p>
               </div>
             </div>
             <button
