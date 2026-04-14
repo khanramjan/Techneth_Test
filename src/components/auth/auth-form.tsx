@@ -84,60 +84,60 @@ export function AuthForm({ mode }: AuthFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md rounded-[30px] bg-[#f9f9f4] p-8 shadow-[0_20px_60px_rgba(42,42,27,0.18)]">
+    <div className="w-full max-w-md rounded-[30px] border border-[#f0dca4]/30 bg-[linear-gradient(145deg,#fff8e8_0%,#f4ecda_48%,#eadfca_100%)] p-8 shadow-[0_28px_90px_rgba(41,22,10,0.32)]">
       <div className="mb-6 space-y-1">
-        <h1 className="text-3xl font-semibold text-[#23241f]">{title}</h1>
-        <p className="text-sm text-[#66685f]">{subtitle}</p>
+        <h1 className="text-3xl font-semibold text-[#20150f]">{title}</h1>
+        <p className="text-sm text-[#6d5144]">{subtitle}</p>
       </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         {mode === "signup" && (
           <label className="block space-y-2">
-            <span className="text-sm font-medium text-[#42453d]">Full name</span>
+            <span className="text-sm font-semibold text-[#4e3427]">Full name</span>
             <input
               type="text"
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Emily King"
-              className="h-12 w-full rounded-2xl border border-[#dedfd6] bg-white px-4 text-sm text-[#20211d] outline-none transition focus:border-[#d7cf4f]"
+              className="h-12 w-full rounded-2xl border border-[#d9be89] bg-[#fff8ed] px-4 text-sm font-medium text-[#2a1b13] outline-none transition focus:border-[#b27b34] focus:ring-2 focus:ring-[#edc267]/45"
             />
           </label>
         )}
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-[#42453d]">Email</span>
+          <span className="text-sm font-semibold text-[#4e3427]">Email</span>
           <input
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="name@email.com"
-            className="h-12 w-full rounded-2xl border border-[#dedfd6] bg-white px-4 text-sm text-[#20211d] outline-none transition focus:border-[#d7cf4f]"
+            className="h-12 w-full rounded-2xl border border-[#d9be89] bg-[#fff8ed] px-4 text-sm font-medium text-[#2a1b13] outline-none transition focus:border-[#b27b34] focus:ring-2 focus:ring-[#edc267]/45"
           />
         </label>
         <label className="block space-y-2">
-          <span className="text-sm font-medium text-[#42453d]">Password</span>
+          <span className="text-sm font-semibold text-[#4e3427]">Password</span>
           <input
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Minimum 6 characters"
-            className="h-12 w-full rounded-2xl border border-[#dedfd6] bg-white px-4 text-sm text-[#20211d] outline-none transition focus:border-[#d7cf4f]"
+            className="h-12 w-full rounded-2xl border border-[#d9be89] bg-[#fff8ed] px-4 text-sm font-medium text-[#2a1b13] outline-none transition focus:border-[#b27b34] focus:ring-2 focus:ring-[#edc267]/45"
           />
         </label>
-        {error && <p className="text-sm text-[#d0463b]">{error}</p>}
-        {message && <p className="text-sm text-[#4e7d2a]">{message}</p>}
+        {error && <p className="text-sm font-medium text-[#b2302f]">{error}</p>}
+        {message && <p className="text-sm font-medium text-[#4f7424]">{message}</p>}
         <button
           type="submit"
           disabled={isLoading}
-          className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#23241f] text-sm font-semibold text-white transition hover:bg-[#12130f] disabled:cursor-not-allowed disabled:bg-[#8e9087]"
+          className="mt-2 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#3e0f1a_0%,#6e2228_45%,#a67022_100%)] text-sm font-semibold text-[#fff7e8] shadow-[0_12px_30px_rgba(63,19,14,0.36)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
           {mode === "login" ? "Log In" : "Create Account"}
         </button>
       </form>
-      <p className="mt-6 text-center text-sm text-[#676960]">
+      <p className="mt-6 text-center text-sm text-[#6d5144]">
         {mode === "login" ? "New here? " : "Already have an account? "}
         <Link
           href={mode === "login" ? "/signup" : "/login"}
-          className="font-semibold text-[#20211d]"
+          className="font-semibold text-[#5a1f24]"
         >
           {mode === "login" ? "Create one" : "Log in"}
         </Link>
