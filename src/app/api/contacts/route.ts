@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { readDashboardData, writeDashboardData } from "@/lib/dashboard-data";
-import type { Contact, DashboardData, SelectedContact } from "@/types/dashboard";
+import { insertContactToSupabase } from "@/lib/dashboard-data";
+import type { Contact } from "@/types/dashboard";
 
 export const runtime = "nodejs";
 
@@ -58,32 +58,6 @@ function buildPhone(seed: number) {
   return `(${area}) ${prefix}-${line}`;
 }
 
-function buildSelectedContact(contact: Contact): SelectedContact {
-  const alias = aliasFromName(contact.name);
-
-  return {
-    name: contact.name,
-    role: contact.role,
-    avatar: contact.avatar,
-    meta: [
-      { id: 1, icon: "phone", label: "Phone number", value: contact.phone ?? "(555) 000-0000" },
-      { id: 2, icon: "mail", label: "Email", value: contact.email ?? `${alias}@mail.com` },
-      { id: 3, icon: "map", label: "Location", value: contact.location ?? "New York, USA" },
-      { id: 4, icon: "briefcase", label: "Specialty", value: contact.role },
-    ],
-    tabs: ["Analytics", "General", "Summary"],
-    quickActions: ["phone", "video", "message-circle", "briefcase"],
-  };
-}
-
-function nextContactId(data: DashboardData) {
-  const ids = data.contactSections.flatMap((section) =>
-    section.contacts.map((contact) => contact.id),
-  );
-
-  return ids.length ? Math.max(...ids) + 1 : 1;
-}
-
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as CreateContactBody;
@@ -96,49 +70,44 @@ export async function POST(request: Request) {
       );
     }
 
-    const data = await readDashboardData();
-
-    if (!data.contactSections.length) {
-      return NextResponse.json(
-        { error: "No contact sections configured." },
-        { status: 400 },
-      );
-    }
-
-    const id = nextContactId(data);
-    const seed = hashValue(`${name}-${id}-${Date.now()}`);
+    const sectionId = body.sectionId ?? 1;
+    const seed = hashValue(`${name}-${sectionId}-${Date.now()}`);
     const alias = aliasFromName(name);
     const generatedRole = body.role?.trim() || chooseFromPool(rolePool, seed);
 
     const newContact: Contact = {
-      id,
+      id: 0,
       name,
       role: generatedRole,
-      avatar: `https://i.pravatar.cc/64?u=${encodeURIComponent(`${alias}-${id}-${seed}`)}`,
+      avatar: `https://i.pravatar.cc/64?u=${encodeURIComponent(`${alias}-${sectionId}-${seed}`)}`,
       email: `${alias}@${chooseFromPool(emailDomains, seed)}`,
       phone: buildPhone(seed),
       location: chooseFromPool(locationPool, seed),
     };
 
-    const targetSection =
-      data.contactSections.find((section) => section.id === body.sectionId) ??
-      data.contactSections[0];
+    const inserted = await insertContactToSupabase({
+      name: newContact.name,
+      role: newContact.role,
+      avatar: newContact.avatar,
+      email: newContact.email ?? null,
+      phone: newContact.phone ?? null,
+      location: newContact.location ?? null,
+      section_id: sectionId,
+    });
 
-    targetSection.contacts.unshift(newContact);
-
-    data.contactSections = data.contactSections.map((section) => ({
-      ...section,
-      count: section.contacts.length,
-    }));
-
-    data.selectedContact = buildSelectedContact(newContact);
-
-    await writeDashboardData(data);
-
-    return NextResponse.json({ contact: newContact });
-  } catch {
+    return NextResponse.json({
+      contact: {
+        ...newContact,
+        id: Number(inserted.id),
+      },
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Could not store contact in Supabase.";
     return NextResponse.json(
-      { error: "Could not store contact in JSON." },
+      { error: message },
       { status: 500 },
     );
   }

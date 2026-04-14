@@ -8,7 +8,7 @@
     "rotate-ccw"
   ],
   "currentUser": {
-    "name": "Emily King",
+    "name": "Tahmina Akter",
     "role": "Realtor",
     "avatar": "https://i.pravatar.cc/96?img=47"
   },
@@ -262,7 +262,7 @@
     "messages": [
       {
         "id": 1,
-        "sender": "Gregory",
+        "sender": "Rakib",
         "text": "deal, I need to check something!",
         "time": "8:32 AM",
         "mine": false

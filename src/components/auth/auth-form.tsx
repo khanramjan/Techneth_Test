@@ -97,7 +97,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               type="text"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Emily King"
+              placeholder="Nusrat Jahan"
               className="h-12 w-full rounded-2xl border border-[#d9be89] bg-[#fff8ed] px-4 text-sm font-medium text-[#2a1b13] outline-none transition focus:border-[#b27b34] focus:ring-2 focus:ring-[#edc267]/45"
             />
           </label>
