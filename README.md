@@ -41,9 +41,13 @@ Responsive CRM-style dashboard built with Next.js, Tailwind CSS, and Supabase au
 
 ## Contacts Storage (Vercel-safe)
 
-Contacts are stored in Supabase table `contacts` (not filesystem).
+Contacts are stored in the Supabase table `public.contacts` (not the filesystem).
 
-Create this table in Supabase SQL editor:
+Run the included migration in Supabase SQL editor or with the Supabase CLI:
+
+- `supabase/migrations/20260415120000_create_contacts.sql`
+
+If you prefer to paste it manually, use:
 
 ```sql
 create table if not exists public.contacts (
@@ -57,7 +61,11 @@ create table if not exists public.contacts (
 	section_id integer not null default 1,
 	created_at timestamptz not null default now()
 );
+
+notify pgrst, 'reload schema';
 ```
+
+If Supabase still reports a schema cache error after creating the table, rerun the SQL once or refresh the API schema cache from the project dashboard.
 
 ## Routes
 
