@@ -7,6 +7,8 @@ export const runtime = "nodejs";
 type CreateContactBody = {
   name?: string;
   role?: string;
+  email?: string;
+  phone?: string;
   sectionId?: number;
 };
 
@@ -93,14 +95,16 @@ export async function POST(request: Request) {
     const seed = hashValue(`${name}-${sectionId}-${Date.now()}`);
     const alias = aliasFromName(name);
     const generatedRole = body.role?.trim() || chooseFromPool(rolePool, seed);
+    const providedEmail = body.email?.trim() ?? "";
+    const providedPhone = body.phone?.trim() ?? "";
 
     const newContact: Contact = {
       id: 0,
       name,
       role: generatedRole,
       avatar: `https://i.pravatar.cc/64?u=${encodeURIComponent(`${alias}-${sectionId}-${seed}`)}`,
-      email: `${alias}@${chooseFromPool(emailDomains, seed)}`,
-      phone: buildPhone(seed),
+      email: providedEmail || `${alias}@${chooseFromPool(emailDomains, seed)}`,
+      phone: providedPhone || buildPhone(seed),
       location: chooseFromPool(locationPool, seed),
     };
 

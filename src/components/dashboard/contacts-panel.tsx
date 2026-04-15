@@ -35,6 +35,8 @@ export function ContactsPanel({
   );
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [sectionId, setSectionId] = useState(defaultSectionId);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
@@ -61,6 +63,8 @@ export function ContactsPanel({
       body: JSON.stringify({
         name: name.trim(),
         role: role.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
         sectionId: activeSectionId ? Number(activeSectionId) : undefined,
       }),
     });
@@ -96,6 +100,8 @@ export function ContactsPanel({
 
     setName("");
     setRole("");
+    setEmail("");
+    setPhone("");
     setIsSaving(false);
 
     if (!payload?.fallback) {
@@ -119,7 +125,7 @@ export function ContactsPanel({
           <p className="text-sm font-semibold text-[#2a2c25]">Create contact</p>
         </div>
         <p className="mb-2 text-xs font-medium text-[#7f8277]">
-          Photo, email, phone, and location are generated automatically.
+          Photo and location are generated automatically.
         </p>
         <div className="space-y-2">
           <input
@@ -133,6 +139,19 @@ export function ContactsPanel({
             value={role}
             onChange={(event) => setRole(event.target.value)}
             placeholder="Role (optional)"
+            className="h-10 w-full rounded-xl border border-[#dcded3] bg-white px-3 text-sm text-[#2a2d25] outline-none"
+          />
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="Email"
+            className="h-10 w-full rounded-xl border border-[#dcded3] bg-white px-3 text-sm text-[#2a2d25] outline-none"
+          />
+          <input
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+            placeholder="Phone number"
             className="h-10 w-full rounded-xl border border-[#dcded3] bg-white px-3 text-sm text-[#2a2d25] outline-none"
           />
           <select
