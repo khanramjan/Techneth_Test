@@ -43,29 +43,12 @@ Responsive CRM-style dashboard built with Next.js, Tailwind CSS, and Supabase au
 
 Contacts are stored in the Supabase table `public.contacts` (not the filesystem).
 
-Run the included migration in Supabase SQL editor or with the Supabase CLI:
+**See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for detailed step-by-step instructions on creating the table.**
 
-- `supabase/migrations/20260415120000_create_contacts.sql`
-
-If you prefer to paste it manually, use:
-
-```sql
-create table if not exists public.contacts (
-	id bigint generated always as identity primary key,
-	name text not null,
-	role text not null,
-	avatar text not null,
-	email text,
-	phone text,
-	location text,
-	section_id integer not null default 1,
-	created_at timestamptz not null default now()
-);
-
-notify pgrst, 'reload schema';
-```
-
-If Supabase still reports a schema cache error after creating the table, rerun the SQL once or refresh the API schema cache from the project dashboard.
+Quick reference:
+- Copy the SQL from `supabase/migrations/20260415120000_create_contacts.sql`
+- Paste it into your Supabase SQL Editor
+- Run the query to create the table and reload the schema
 
 ## Routes
 

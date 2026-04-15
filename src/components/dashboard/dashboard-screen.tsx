@@ -53,6 +53,7 @@ export function DashboardScreen({ data, authUser }: DashboardScreenProps) {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [headerMessage, setHeaderMessage] = useState("Interactive mode active");
   const [selectedContactOverride, setSelectedContactOverride] = useState<SelectedContact | null>(null);
+  const [fallbackContacts, setFallbackContacts] = useState<Record<number, Contact[]>>({});
   const [activeRailId, setActiveRailId] = useState(
     data.railItems.find((item) => item.active)?.id ?? data.railItems[0]?.id ?? 0,
   );
@@ -62,7 +63,8 @@ export function DashboardScreen({ data, authUser }: DashboardScreenProps) {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 
     return data.contactSections.map((section) => {
-      let contacts = [...section.contacts];
+      const localFallback = fallbackContacts[section.id] ?? [];
+      let contacts = [...localFallback, ...section.contacts];
 
       if (normalizedQuery) {
         contacts = contacts.filter((contact) => {
@@ -92,7 +94,7 @@ export function DashboardScreen({ data, authUser }: DashboardScreenProps) {
         count: contacts.length,
       };
     });
-  }, [data.contactSections, searchQuery, searchScope, sortDirection]);
+  }, [data.contactSections, fallbackContacts, searchQuery, searchScope, sortDirection]);
 
   const railItems = useMemo(
     () => data.railItems.map((item) => ({ ...item, active: item.id === activeRailId })),
@@ -123,6 +125,34 @@ export function DashboardScreen({ data, authUser }: DashboardScreenProps) {
   const handleContactSelect = (contact: Contact) => {
     setSelectedContactOverride(toSelectedContact(contact));
     setHeaderMessage(`${contact.name} selected`);
+  };
+
+  const handleContactCreate = ({
+    contact,
+    sectionId,
+    fallback,
+    warning,
+  }: {
+    contact: Contact;
+    sectionId: number;
+    fallback: boolean;
+    warning?: string;
+  }) => {
+    setSelectedContactOverride(toSelectedContact(contact));
+
+    if (fallback) {
+      setFallbackContacts((current) => {
+        const existing = current[sectionId] ?? [];
+        return {
+          ...current,
+          [sectionId]: [contact, ...existing.filter((item) => item.id !== contact.id)],
+        };
+      });
+      setHeaderMessage(warning ?? "Contact added locally");
+      return;
+    }
+
+    setHeaderMessage(`${contact.name} created`);
   };
 
   return (
@@ -193,6 +223,7 @@ export function DashboardScreen({ data, authUser }: DashboardScreenProps) {
             sections={visibleSections}
             selectedName={selectedContact?.name ?? ""}
             onContactSelect={handleContactSelect}
+            onContactCreate={handleContactCreate}
           />
           <MainPanel
             key={selectedContact?.name ?? "no-contact"}

@@ -32,6 +32,25 @@ const locationPool = [
 
 const emailDomains = ["mail.com", "estatehq.com", "propertynow.com", "contacthub.io"];
 
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === "object" && error !== null && "message" in error) {
+    return String((error as { message: unknown }).message);
+  }
+
+  return "Could not store contact in Supabase.";
+}
+
+function isMissingContactsTableError(message: string) {
+  const normalized = message.toLowerCase();
+  return normalized.includes("schema cache")
+    || normalized.includes("could not find the table")
+    || normalized.includes("relation \"public.contacts\" does not exist");
+}
+
 function hashValue(value: string) {
   let hash = 0;
 
@@ -85,30 +104,48 @@ export async function POST(request: Request) {
       location: chooseFromPool(locationPool, seed),
     };
 
-    const inserted = await insertContactToSupabase({
-      name: newContact.name,
-      role: newContact.role,
-      avatar: newContact.avatar,
-      email: newContact.email ?? null,
-      phone: newContact.phone ?? null,
-      location: newContact.location ?? null,
-      section_id: sectionId,
-    });
+    try {
+      const inserted = await insertContactToSupabase({
+        name: newContact.name,
+        role: newContact.role,
+        avatar: newContact.avatar,
+        email: newContact.email ?? null,
+        phone: newContact.phone ?? null,
+        location: newContact.location ?? null,
+        section_id: sectionId,
+      });
 
-    return NextResponse.json({
-      contact: {
-        ...newContact,
-        id: Number(inserted.id),
-      },
-    });
+      return NextResponse.json({
+        contact: {
+          ...newContact,
+          id: Number(inserted.id),
+        },
+        sectionId,
+        fallback: false,
+      });
+    } catch (error) {
+      console.error("Supabase contact insert error:", error);
+      const message = getErrorMessage(error);
+
+      if (isMissingContactsTableError(message)) {
+        return NextResponse.json({
+          contact: {
+            ...newContact,
+            id: -Date.now(),
+          },
+          sectionId,
+          fallback: true,
+          warning: "Supabase contacts table is unavailable. Contact was added locally.",
+        });
+      }
+
+      return NextResponse.json(
+        { error: message },
+        { status: 500 },
+      );
+    }
   } catch (error) {
-    console.error("Supabase contact insert error:", error);
-    const message =
-      error instanceof Error
-        ? error.message
-        : typeof error === "object" && error !== null && "message" in error
-        ? (error as any).message
-        : "Could not store contact in Supabase.";
+    const message = getErrorMessage(error);
     return NextResponse.json(
       { error: message },
       { status: 500 },

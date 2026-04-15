@@ -12,6 +12,12 @@ type ContactsPanelProps = {
   sections: ContactSection[];
   selectedName: string;
   onContactSelect: (contact: Contact) => void;
+  onContactCreate: (payload: {
+    contact: Contact;
+    sectionId: number;
+    fallback: boolean;
+    warning?: string;
+  }) => void;
 };
 
 export function ContactsPanel({
@@ -19,6 +25,7 @@ export function ContactsPanel({
   sections,
   selectedName,
   onContactSelect,
+  onContactCreate,
 }: ContactsPanelProps) {
   const router = useRouter();
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -31,11 +38,13 @@ export function ContactsPanel({
   const [sectionId, setSectionId] = useState(defaultSectionId);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const activeSectionId = sectionId || defaultSectionId;
 
   const handleCreateContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setNotice("");
 
     if (!name.trim()) {
       setError("Name is required.");
@@ -56,19 +65,42 @@ export function ContactsPanel({
       }),
     });
 
+    const payload = (await response.json().catch(() => null)) as {
+      error?: string;
+      contact?: Contact;
+      sectionId?: number;
+      fallback?: boolean;
+      warning?: string;
+    } | null;
+
     if (!response.ok) {
-      const payload = (await response.json().catch(() => null)) as {
-        error?: string;
-      } | null;
       setError(payload?.error ?? "Could not create contact.");
       setIsSaving(false);
       return;
     }
 
+    const createdSectionId = payload?.sectionId
+      ?? (activeSectionId ? Number(activeSectionId) : sections[0]?.id ?? 1);
+    if (payload?.contact) {
+      onContactCreate({
+        contact: payload.contact,
+        sectionId: createdSectionId,
+        fallback: Boolean(payload.fallback),
+        warning: payload.warning,
+      });
+    }
+
+    if (payload?.warning) {
+      setNotice(payload.warning);
+    }
+
     setName("");
     setRole("");
     setIsSaving(false);
-    router.refresh();
+
+    if (!payload?.fallback) {
+      router.refresh();
+    }
   };
 
   return (
@@ -115,6 +147,7 @@ export function ContactsPanel({
             ))}
           </select>
           {error ? <p className="text-xs font-medium text-[#cb4d3d]">{error}</p> : null}
+          {notice ? <p className="text-xs font-medium text-[#6f7269]">{notice}</p> : null}
           <button
             type="submit"
             disabled={isSaving || !sections.length}
