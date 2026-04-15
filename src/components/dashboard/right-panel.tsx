@@ -2,15 +2,15 @@
 
 import {
   ArrowUpRight,
+  CalendarDays,
   Check,
-  Link2,
-  MessageCircle,
+  ChevronLeft,
+  Paperclip,
   Plus,
   Search,
   Send,
   Share2,
 } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import type {
   ChatAttachment,
@@ -25,12 +25,6 @@ type RightPanelProps = {
   messages: ChatMessage[];
   attachments: ChatAttachment[];
   className?: string;
-};
-
-const actionIconMap: Record<string, LucideIcon> = {
-  share: Share2,
-  plus: Plus,
-  "arrow-up-right": ArrowUpRight,
 };
 
 export function RightPanel({
@@ -152,59 +146,72 @@ export function RightPanel({
   };
 
   return (
-    <aside className={`space-y-4 ${className ?? ""}`}>
-      <div className="rounded-[30px] bg-[#f4f5ef] p-4 sm:p-5">
+    <aside className={`rounded-[30px] bg-[#f4f5ef] p-4 sm:p-5 ${className ?? ""}`}>
+      <div className="mb-3 flex items-center justify-end gap-2">
+        <button
+          type="button"
+          onClick={() => {
+            void handleActionClick("share");
+          }}
+          className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#dedfd5] bg-[#f9f9f4] px-3 text-sm font-semibold text-[#3c3f36]"
+        >
+          <Share2 className="h-4 w-4" />
+          Share
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setStatusLabel("Calendar action ready");
+          }}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#484b41]"
+        >
+          <CalendarDays className="h-4 w-4" />
+        </button>
+      </div>
+
+      <section className="rounded-2xl border border-[#e2e3da] bg-white p-3">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {config.actions.map((action) => {
-              const Icon = actionIconMap[action.icon] ?? Share2;
-
-              if (action.label) {
-                return (
-                  <button
-                    key={action.id}
-                    type="button"
-                    onClick={() => {
-                      void handleActionClick(action.icon);
-                    }}
-                    className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#dedfd5] bg-[#f9f9f4] px-3 text-sm font-semibold text-[#3c3f36]"
-                  >
-                    <Icon className="h-4 w-4" />
-                    {action.label}
-                  </button>
-                );
-              }
-
-              return (
-                <button
-                  key={action.id}
-                  type="button"
-                  onClick={() => {
-                    void handleActionClick(action.icon);
-                  }}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#dedfd5] bg-[#f9f9f4] text-[#484b41]"
-                >
-                  <Icon className="h-4 w-4" />
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[#e2e3da] bg-white p-4">
-          <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-base font-semibold text-[#25271f]">{config.notesTitle}</h3>
+            <button
+              type="button"
+              onClick={() => {
+                setNotesCollapsed((current) => !current);
+              }}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dedfd5] bg-[#f9f9f4] text-[#5a5d54]"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
             <span className="rounded-lg bg-[#f2f3ed] px-2 py-1 text-xs font-semibold text-[#66695f]">
               {taskCount}
             </span>
+            <h3 className="text-base font-semibold text-[#25271f]">{config.notesTitle}</h3>
           </div>
-          {!notesCollapsed ? (
-            <div className="space-y-3">
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={addQuickNote}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dedfd5] bg-[#f9f9f4] text-[#5a5d54]"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setNotesCollapsed((current) => !current);
+              }}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dedfd5] bg-[#f9f9f4] text-[#5a5d54]"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {!notesCollapsed ? (
+          <div className="rounded-2xl bg-[#f7f8f2] p-2.5">
+            <div className="space-y-1.5">
               {taskItems.map((task) => (
-                <div
-                  key={task.id}
-                  className="grid grid-cols-[20px_minmax(0,1fr)_auto] items-start gap-2 rounded-xl bg-[#f9f9f4] px-2 py-2"
-                >
+                <div key={task.id} className="grid grid-cols-[18px_minmax(0,1fr)_auto] items-start gap-2 rounded-xl bg-white px-2 py-2">
                   <button
                     type="button"
                     onClick={() => toggleTask(task.id)}
@@ -216,30 +223,32 @@ export function RightPanel({
                   >
                     <Check className="h-3 w-3" />
                   </button>
-                  <p className="text-xs leading-5 text-[#606359]">{task.text}</p>
+                  <p className={`text-xs leading-5 ${task.done ? "text-[#a0a39a]" : "text-[#45483f]"}`}>
+                    {task.text}
+                  </p>
                   <span className="text-[11px] font-semibold text-[#9a9d93]">{task.time}</span>
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="rounded-xl bg-[#f9f9f4] px-3 py-3 text-xs font-semibold text-[#7e8178]">
-              Notes are collapsed. Use the expand button above.
-            </p>
-          )}
-        </div>
-      </div>
+            <div className="mx-auto mt-2 h-[2px] w-4 rounded-full bg-[#43463d]" />
+          </div>
+        ) : (
+          <p className="rounded-xl bg-[#f9f9f4] px-3 py-3 text-xs font-semibold text-[#7e8178]">
+            Notes are collapsed. Use the expand button above.
+          </p>
+        )}
+      </section>
 
-      <div className="rounded-[30px] bg-[#f4f5ef] p-4 sm:p-5">
+      <section className="mt-3 rounded-2xl border border-[#e2e3da] bg-white p-3">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="text-base font-semibold text-[#25271f]">{config.chatTitle}</h3>
+          <div className="flex items-center gap-2 text-[#25271f]">
+            <Search className="h-4 w-4 text-[#797d72]" />
+            <h3 className="text-base font-semibold">{config.chatTitle}</h3>
+          </div>
           <button
             type="button"
             onClick={() => {
-              setChatExpanded((current) => {
-                const next = !current;
-                setStatusLabel(next ? "Chat expanded" : "Chat collapsed");
-                return next;
-              });
+              setChatExpanded((current) => !current);
             }}
             className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#dedfd5] bg-[#f9f9f4] text-[#484b41]"
           >
@@ -247,19 +256,16 @@ export function RightPanel({
           </button>
         </div>
 
-        <div className="space-y-3 rounded-2xl border border-[#e2e3da] bg-white p-3">
+        <div className="space-y-3 rounded-2xl bg-[#f7f8f2] p-2.5">
           {chatMessages.map((message) => (
             <div key={message.id} className="space-y-1">
-              <div
-                className={`inline-flex max-w-[90%] rounded-2xl px-3 py-2 text-sm font-medium ${
-                  message.mine
-                    ? "ml-auto bg-[#efe75b] text-[#2f3229]"
-                    : "bg-[#f4f5ef] text-[#303229]"
-                }`}
-              >
+              <div className="inline-flex max-w-[90%] rounded-2xl bg-white px-3 py-2 text-sm font-medium text-[#303229]">
                 {message.text}
               </div>
-              <p className="text-right text-[11px] font-semibold text-[#8f9288]">{message.time}</p>
+              <div className="flex items-center justify-end gap-1 text-[11px] font-semibold text-[#8f9288]">
+                <Check className="h-3 w-3 text-[#d2e972]" />
+                <span>{message.time}</span>
+              </div>
             </div>
           ))}
 
@@ -270,29 +276,36 @@ export function RightPanel({
                   key={attachment.id}
                   type="button"
                   onClick={() => handleAttachmentClick(attachment.title)}
-                  className="rounded-xl border border-[#e1e2d9] bg-[#f9f9f4] p-2 text-left"
+                  className="rounded-xl border border-[#e1e2d9] bg-white p-2"
                 >
-                  <div className="mb-2 h-20 rounded-lg bg-[repeating-linear-gradient(0deg,#f8f8f2,#f8f8f2_6px,#eceee6_6px,#eceee6_8px)]" />
-                  <p className="truncate text-xs font-semibold text-[#5f6258]">{attachment.title}</p>
+                  <div className="h-20 rounded-md bg-[repeating-linear-gradient(0deg,#f8f8f2,#f8f8f2_6px,#eceee6_6px,#eceee6_8px)]" />
                 </button>
               ))}
             </div>
           ) : null}
 
           <form
-            className="flex items-center gap-2 rounded-xl border border-[#e1e2d8] bg-[#f9f9f4] px-3 py-2"
+            className="flex items-center gap-2 rounded-xl border border-[#e1e2d8] bg-white px-2 py-2"
             onSubmit={(event) => {
               event.preventDefault();
               sendMessage();
             }}
           >
-            <Search className="h-4 w-4 text-[#8d9085]" />
             <input
               placeholder={config.chatInputPlaceholder}
               value={chatInput}
               onChange={(event) => setChatInput(event.target.value)}
-              className="h-8 flex-1 bg-transparent text-sm text-[#303229] outline-none placeholder:text-[#a0a39a]"
+              className="h-8 flex-1 bg-transparent px-1 text-sm text-[#303229] outline-none placeholder:text-[#a0a39a]"
             />
+            <button
+              type="button"
+              onClick={() => {
+                setStatusLabel("Attachment action ready");
+              }}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[#7c8075]"
+            >
+              <Paperclip className="h-4 w-4" />
+            </button>
             <button
               type="button"
               onClick={sendMessage}
@@ -302,13 +315,9 @@ export function RightPanel({
             </button>
           </form>
         </div>
+      </section>
 
-        <div className="mt-3 flex items-center gap-2 text-xs text-[#8d9085]">
-          <Link2 className="h-3.5 w-3.5" />
-          <MessageCircle className="h-3.5 w-3.5" />
-          <span>{statusLabel}</span>
-        </div>
-      </div>
+      <p className="sr-only">{statusLabel}</p>
     </aside>
   );
 }

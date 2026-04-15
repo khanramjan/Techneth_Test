@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   BriefcaseBusiness,
+  ChevronDown,
   Mail,
   MapPin,
   MessageCircle,
@@ -19,7 +20,6 @@ import type {
   DealMetric,
   SelectedContact,
 } from "@/types/dashboard";
-import { AnalyticsCharts } from "@/components/dashboard/analytics-charts";
 
 type MainPanelProps = {
   toolbarIcons: string[];
@@ -51,6 +51,9 @@ const actionIconMap: Record<string, LucideIcon> = {
 
 const rangeOptions = ["Last weeks", "Last month", "Last quarter"];
 
+const metricPatternClassName =
+  "bg-[radial-gradient(circle,#cfd3c5_1px,transparent_1px)] [background-size:6px_6px]";
+
 function metaValue(selectedContact: SelectedContact | null, icon: string) {
   return selectedContact?.meta.find((item) => item.icon === icon)?.value ?? "";
 }
@@ -81,6 +84,35 @@ export function MainPanel({
   const activeTab = activeTabs[activeTabIndex] ?? activeTabs[0] ?? "Analytics";
   const isAnalyticsTab = normalizeTabLabel(activeTab) === "analytics";
   const currentRange = rangeOptions[rangeIndex] ?? analytics.range;
+  const latestSeriesPoint = analytics.series.at(-1);
+  const trendSegments = [
+    {
+      id: "started",
+      value: latestSeriesPoint?.started ?? 0,
+      widthClassName: "w-[52px]",
+      barClassName: "bg-[#ece54b]",
+    },
+    {
+      id: "lost",
+      value: latestSeriesPoint?.lost ?? 0,
+      widthClassName: "w-[56px]",
+      barClassName:
+        "bg-[radial-gradient(circle,#c9cdbf_1.2px,transparent_1.2px)] [background-size:7px_7px]",
+    },
+    {
+      id: "won",
+      value: latestSeriesPoint?.won ?? 0,
+      widthClassName: "w-[124px]",
+      barClassName:
+        "bg-[repeating-linear-gradient(135deg,#c9ccbf_0px,#c9ccbf_2px,#edf0e4_2px,#edf0e4_6px)]",
+    },
+    {
+      id: "focus",
+      value: latestSeriesPoint?.focus ?? 0,
+      widthClassName: "w-[64px]",
+      barClassName: "bg-[#eff1e8]",
+    },
+  ];
 
   const handleToolbarAction = (icon: string) => {
     if (icon === "undo") {
@@ -264,33 +296,74 @@ export function MainPanel({
         )}
 
         <div className="mt-4 rounded-3xl border border-[#e1e2d9] bg-white p-3 sm:p-4">
-          <div className="mb-3 flex flex-wrap items-center gap-3">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-[#7f8277]">{analytics.averageScoreLabel}</p>
-              <div className="flex items-end gap-2">
-                <p className="text-[56px] leading-none font-semibold tracking-tight text-[#25271f]">
-                  {analytics.averageScore}
-                </p>
-                <span className="mb-2 rounded-lg bg-[#cef27e] px-2 py-1 text-xs font-bold text-[#325118]">
-                  {analytics.delta}
-                </span>
+          {isAnalyticsTab ? (
+            <div className="space-y-6">
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <div className="flex items-end gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-medium text-[#7f8277]">{analytics.averageScoreLabel}</p>
+                      <span className="rounded-md bg-[#cef27e] px-1.5 py-0.5 text-[10px] font-bold text-[#325118]">
+                        {analytics.delta}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-[56px] leading-none font-semibold tracking-tight text-[#25271f]">
+                      {analytics.averageScore}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={cycleRange}
+                    className="mb-1 inline-flex h-9 items-center gap-1 rounded-lg border border-[#e1e2d8] bg-[#f8f8f3] px-3 text-sm font-semibold text-[#55584f]"
+                  >
+                    {currentRange}
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+
+                <div className="flex min-w-[320px] flex-1 items-end justify-end gap-3">
+                  {trendSegments.map((segment) => (
+                    <div key={segment.id} className="flex flex-col items-center gap-1">
+                      <p className="text-[10px] font-semibold text-[#808379]">{segment.value}</p>
+                      <div
+                        className={`h-10 rounded-xl border border-[#e2e4db] ${segment.widthClassName} ${segment.barClassName}`}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-3 sm:divide-x sm:divide-[#eceee5]">
+                {dealMetrics.map((metric, index) => (
+                  <article key={metric.id} className={index > 0 ? "sm:pl-5" : ""}>
+                    <p className="text-sm font-semibold text-[#73766b]">{metric.label}</p>
+                    <p className="mt-1 text-[52px] leading-none font-semibold tracking-tight text-[#25271f]">
+                      {metric.value}
+                    </p>
+                    <div className="mt-3">
+                      <div className={`mb-1 h-7 w-[118px] rounded-md border border-[#e4e6dd] ${metricPatternClassName}`} />
+                      <div className="relative">
+                        <div className="h-5 overflow-hidden rounded-md bg-[#eceee5]">
+                          <div
+                            className="h-full rounded-md"
+                            style={{
+                              width: `${Math.max(18, Math.min(metric.progress, 90))}%`,
+                              backgroundColor: metric.accent,
+                            }}
+                          />
+                        </div>
+                        <span
+                          className="absolute top-1/2 -translate-y-1/2 rounded-md bg-[#d6f17a] px-1.5 py-0.5 text-[10px] font-bold text-[#3d5f1e]"
+                          style={{ left: `calc(${Math.max(20, Math.min(metric.progress, 85))}% - 10px)` }}
+                        >
+                          {metric.delta}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
             </div>
-            <button
-              type="button"
-              onClick={cycleRange}
-              className="ml-auto h-10 rounded-xl border border-[#e1e2d8] bg-[#f8f8f3] px-3 text-sm font-semibold text-[#55584f]"
-            >
-              {currentRange}
-            </button>
-          </div>
-          {isAnalyticsTab ? (
-            <AnalyticsCharts
-              series={analytics.series}
-              scoreTrendLabel={analytics.scoreTrendLabel}
-              scoreTrendBadge={analytics.scoreTrendBadge}
-              dealBarsLabel={analytics.dealBarsLabel}
-            />
           ) : (
             <div className="rounded-2xl border border-[#e4e5dc] bg-[#f9f9f4] p-4">
               <p className="text-sm font-semibold text-[#2c2e27]">{activeTab} view</p>
@@ -312,26 +385,6 @@ export function MainPanel({
             </div>
           )}
         </div>
-      </div>
-
-      <div className="mt-4 grid gap-3 md:grid-cols-3">
-        {dealMetrics.map((metric) => (
-          <article key={metric.id} className="rounded-3xl border border-[#e1e2d9] bg-[#f8f8f3] p-4">
-            <p className="text-sm font-semibold text-[#73766b]">{metric.label}</p>
-            <p className="mt-1 text-[56px] leading-none font-semibold tracking-tight text-[#25271f]">
-              {metric.value}
-            </p>
-            <div className="mt-3 h-5 rounded-lg bg-[#eceee5] p-0.5">
-              <div
-                className="h-full rounded-md"
-                style={{ width: `${metric.progress}%`, backgroundColor: metric.accent }}
-              />
-            </div>
-            <span className="mt-2 inline-block rounded-md bg-[#e6e7de] px-2 py-1 text-xs font-bold text-[#52554a]">
-              {metric.delta}
-            </span>
-          </article>
-        ))}
       </div>
 
       <article className="mt-4 overflow-hidden rounded-3xl border border-[#e1e2d8] bg-white">
