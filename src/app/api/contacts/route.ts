@@ -102,9 +102,12 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
+    console.error("Supabase contact insert error:", error);
     const message =
       error instanceof Error
         ? error.message
+        : typeof error === "object" && error !== null && "message" in error
+        ? (error as any).message
         : "Could not store contact in Supabase.";
     return NextResponse.json(
       { error: message },
